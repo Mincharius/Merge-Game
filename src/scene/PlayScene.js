@@ -64,17 +64,17 @@ export default class HelloWorldScene extends Phaser.Scene {
 
   stopDrag() {
     let flag = false;
-
+  
     for (let i = 0; i < this.slots.getChildren().length; i++) {
       const current = this.slots.getChildren()[i];
       const boundSlot = current.getBounds();
       const boundIcon = this.dragObject.getBounds();
-
+  
       const isIntersects = Phaser.Geom.Intersects.RectangleToRectangle(
         boundIcon,
         boundSlot
       );
-
+  
       if (isIntersects) {
         const currentIcon = this.map[current.row][current.col];
         if (
@@ -84,19 +84,25 @@ export default class HelloWorldScene extends Phaser.Scene {
         ) {
           break;
         }
-
+  
         flag = true;
+        if (this.dragObject === currentIcon) {
+          this.dragObject = null;
+          break;
+        }
+  
         this.mergeIcon(this.dragObject, currentIcon);
         break;
       }
     }
-
+  
     if (!flag) {
       this.dragObject.back();
     }
-
+  
     this.input.off("pointermove", this.doDrag, this);
     this.input.off("pointerup", this.stopDrag, this);
   }
+  
 
 }
